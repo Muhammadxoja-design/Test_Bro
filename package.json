@@ -1,0 +1,16 @@
+{
+  "name": "sypev",
+  "private": true,
+  "workspaces": ["server", "web", "shared"],
+  "scripts": {
+    "dev": "concurrently -k \"npm:dev:server\" \"npm:dev:web\"",
+    "dev:server": "npm --workspace server run dev",
+    "dev:web": "npm --workspace web run dev",
+    "build": "npm --workspace server run build && npm --workspace web run build",
+    "start": "npm --workspace server run start",
+    "test": "npm --workspace server run test"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

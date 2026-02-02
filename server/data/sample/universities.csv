@@ -1,0 +1,3 @@
+university_name,state,tuition_usd,aid_policy,sat_range_min,sat_range_max,english_req,application_deadline,description
+University of Pennsylvania,PA,60000,need-blind,1450,1570,IELTS 7.0 / TOEFL 100,2026-01-05,Private Ivy League university in Philadelphia.
+Duke University,NC,64000,need-aware,1440,1570,IELTS 7.0 / TOEFL 100,2026-01-02,Private research university in Durham.

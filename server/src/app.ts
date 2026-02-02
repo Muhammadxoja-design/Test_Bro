@@ -35,17 +35,19 @@ app.use("/api/sat", authOptional, satRouter);
 app.use("/api/admissions", authRequired, admissionsRouter);
 app.use("/api/ai", authRequired, aiRouter);
 
-if (process.env.NODE_ENV === "production") {
-  const webDist = path.resolve(process.cwd(), "web", "dist");
-  if (fs.existsSync(webDist)) {
-    app.use(express.static(webDist));
-    app.get("*", (req, res, next) => {
-      if (req.path.startsWith("/api")) {
-        return next();
-      }
-      res.sendFile(path.join(webDist, "index.html"));
-    });
-  }
+const webDistCandidates = [
+  path.resolve(process.cwd(), "web", "dist"),
+  path.resolve(__dirname, "..", "..", "web", "dist")
+];
+const webDist = webDistCandidates.find((candidate) => fs.existsSync(candidate));
+if (webDist) {
+  app.use(express.static(webDist));
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api")) {
+      return next();
+    }
+    res.sendFile(path.join(webDist, "index.html"));
+  });
 }
 
 app.use((_req, _res, next) => {

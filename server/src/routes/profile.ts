@@ -41,8 +41,10 @@ router.put("/", async (req, res, next) => {
       ieltsScore: input.ielts_score ?? current?.ieltsScore ?? null
     };
 
-    const hasBothSat = typeof nextValues.satMath === "number" && typeof nextValues.satReadingWriting === "number";
-    const satTotal = hasBothSat ? nextValues.satMath + nextValues.satReadingWriting : null;
+    const satMath = nextValues.satMath;
+    const satReadingWriting = nextValues.satReadingWriting;
+    const hasBothSat = typeof satMath === "number" && typeof satReadingWriting === "number";
+    const satTotal = hasBothSat ? satMath + satReadingWriting : null;
 
     await db
       .update(studentProfiles)

@@ -6,6 +6,7 @@ import { Input } from "../components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Label } from "../components/ui/label";
 import { useAuth } from "../lib/auth";
+import Page from "../components/Page";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -27,11 +28,18 @@ export default function Login() {
   };
 
   return (
-    <div className="flex justify-center">
-      <Card className="w-full max-w-md">
+    <Page className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+      <div className="space-y-4" data-animate="fade">
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">Welcome back</p>
+        <h1 className="text-4xl font-semibold leading-tight">Log in and keep your plan on track.</h1>
+        <p className="text-muted-foreground">
+          Access your dashboard, SAT study plan, and the admissions shortlist in one place.
+        </p>
+      </div>
+      <Card className="w-full max-w-md justify-self-center" data-animate="card">
         <CardHeader>
-          <CardTitle>Welcome back</CardTitle>
-          <CardDescription>Log in to continue your SAT and admissions plan.</CardDescription>
+          <CardTitle>Sign in</CardTitle>
+          <CardDescription>Use your email and password.</CardDescription>
         </CardHeader>
         <CardContent>
           <form className="space-y-4" onSubmit={handleSubmit}>
@@ -47,11 +55,15 @@ export default function Login() {
               {loading ? "Logging in..." : "Log in"}
             </Button>
             <p className="text-sm text-muted-foreground">
-              New here? <Link className="text-primary" to="/register">Create an account</Link>.
+              New here?{" "}
+              <Link className="text-primary" to="/register">
+                Create an account
+              </Link>
+              .
             </p>
           </form>
         </CardContent>
       </Card>
-    </div>
+    </Page>
   );
 }

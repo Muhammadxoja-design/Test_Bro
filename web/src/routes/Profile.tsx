@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
+import Page from "../components/Page";
 
 export default function Profile() {
   const [loading, setLoading] = React.useState(true);
@@ -53,14 +54,18 @@ export default function Profile() {
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-semibold">Profile</h1>
-      <Card>
+    <Page className="space-y-8">
+      <div className="space-y-2" data-animate="fade">
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">Profile</p>
+        <h1 className="text-4xl font-semibold">Your student details.</h1>
+        <p className="text-muted-foreground">Update your background to personalize recommendations.</p>
+      </div>
+      <Card data-animate="card">
         <CardHeader>
           <CardTitle>Student details</CardTitle>
         </CardHeader>
         <CardContent>
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="space-y-5" onSubmit={handleSubmit}>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label>Grade</Label>
@@ -76,7 +81,7 @@ export default function Profile() {
               </div>
             </div>
 
-            <div className="rounded-lg border p-4">
+            <div className="rounded-2xl border border-white/70 bg-white/70 p-5">
               <h3 className="text-sm font-semibold">SAT subscores</h3>
               <div className="mt-4 grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
@@ -95,6 +100,6 @@ export default function Profile() {
           </form>
         </CardContent>
       </Card>
-    </div>
+    </Page>
   );
 }

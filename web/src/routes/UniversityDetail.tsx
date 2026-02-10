@@ -6,6 +6,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Badge } from "../components/ui/badge";
+import Page from "../components/Page";
 
 export default function UniversityDetail() {
   const { id } = useParams();
@@ -60,13 +61,16 @@ export default function UniversityDetail() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-semibold">{university.name}</h1>
-        <p className="text-muted-foreground">{university.state} ? SAT {university.satRangeMin ?? "N/A"}-{university.satRangeMax ?? "N/A"}</p>
+    <Page className="space-y-8">
+      <div className="space-y-2" data-animate="fade">
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">University</p>
+        <h1 className="text-4xl font-semibold">{university.name}</h1>
+        <p className="text-muted-foreground">
+          {university.state} - SAT {university.satRangeMin ?? "N/A"}-{university.satRangeMax ?? "N/A"}
+        </p>
       </div>
 
-      <Card>
+      <Card data-animate="card">
         <CardHeader>
           <CardTitle>Overview</CardTitle>
         </CardHeader>
@@ -79,7 +83,7 @@ export default function UniversityDetail() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card data-animate="card">
         <CardHeader>
           <CardTitle>Did you know?</CardTitle>
         </CardHeader>
@@ -89,13 +93,18 @@ export default function UniversityDetail() {
               {university.facts
                 .filter((fact: any) => fact.sourceUrl)
                 .map((fact: any) => (
-                  <div key={fact.id} className="rounded-md border p-3 text-sm">
+                  <div key={fact.id} className="rounded-2xl border border-white/70 bg-white/70 p-4 text-sm">
                     <div className="flex flex-wrap items-center gap-2">
                       {fact.tag && <Badge variant="outline">{fact.tag}</Badge>}
                       {fact.year && <Badge variant="outline">{fact.year}</Badge>}
                     </div>
                     <p className="mt-2">{fact.factText}</p>
-                    <a className="mt-2 inline-block text-xs text-primary underline" href={fact.sourceUrl} target="_blank" rel="noreferrer">
+                    <a
+                      className="mt-2 inline-block text-xs font-semibold text-primary underline"
+                      href={fact.sourceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       Source
                     </a>
                   </div>
@@ -107,7 +116,7 @@ export default function UniversityDetail() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card data-animate="card">
         <CardHeader>
           <CardTitle>Add a fact</CardTitle>
         </CardHeader>
@@ -135,6 +144,6 @@ export default function UniversityDetail() {
           </form>
         </CardContent>
       </Card>
-    </div>
+    </Page>
   );
 }

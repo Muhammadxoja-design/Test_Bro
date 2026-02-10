@@ -11,6 +11,7 @@ import UniversityDetail from "./routes/UniversityDetail";
 import Tutor from "./routes/Tutor";
 import Universities from "./routes/Universities";
 import { Button } from "./components/ui/button";
+import { gsap } from "gsap";
 
 function ProtectedRoute({ children }: { children: React.ReactElement }) {
   const { user, loading } = useAuth();
@@ -25,28 +26,48 @@ function ProtectedRoute({ children }: { children: React.ReactElement }) {
 
 function Layout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
+  const shellRef = React.useRef<HTMLDivElement>(null);
+
+  React.useLayoutEffect(() => {
+    if (!shellRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.from("[data-shell='nav']", {
+        y: -18,
+        opacity: 0,
+        duration: 0.7,
+        ease: "power3.out"
+      });
+    }, shellRef);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-sky-50">
-      <header className="border-b bg-white/80 backdrop-blur">
+    <div
+      ref={shellRef}
+      className="relative min-h-screen bg-[radial-gradient(circle_at_top,_#e0f2fe,_transparent_55%),radial-gradient(circle_at_20%_20%,_#fef3c7,_transparent_45%),radial-gradient(circle_at_80%_30%,_#ccfbf1,_transparent_55%)]"
+    >
+      <div className="pointer-events-none absolute inset-0 -z-10 opacity-70" aria-hidden />
+      <header className="sticky top-0 z-20 border-b border-white/40 bg-white/70 backdrop-blur" data-shell="nav">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link to="/dashboard" className="text-xl font-semibold tracking-tight">
+          <Link to="/dashboard" className="flex items-center gap-3 text-lg font-semibold tracking-tight">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">S</span>
             Sypev
           </Link>
           {user ? (
-            <nav className="flex items-center gap-4 text-sm">
-              <Link to="/dashboard" className="hover:text-primary">
+            <nav className="flex flex-wrap items-center gap-3 text-sm font-medium">
+              <Link to="/dashboard" className="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary">
                 Dashboard
               </Link>
-              <Link to="/study/sat" className="hover:text-primary">
+              <Link to="/study/sat" className="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary">
                 SAT Study
               </Link>
-              <Link to="/admissions" className="hover:text-primary">
+              <Link to="/admissions" className="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary">
                 Admissions
               </Link>
-              <Link to="/universities" className="hover:text-primary">
+              <Link to="/universities" className="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary">
                 Universities
               </Link>
-              <Link to="/tutor" className="hover:text-primary">
+              <Link to="/tutor" className="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary">
                 AI Tutor
               </Link>
               <Button variant="outline" size="sm" onClick={logout}>
@@ -55,17 +76,17 @@ function Layout({ children }: { children: React.ReactNode }) {
             </nav>
           ) : (
             <nav className="flex items-center gap-3">
-              <Link to="/login" className="text-sm hover:text-primary">
+              <Link to="/login" className="text-sm font-medium hover:text-primary">
                 Log in
               </Link>
-              <Link to="/register" className="text-sm hover:text-primary">
-                Register
-              </Link>
+              <Button asChild size="sm">
+                <Link to="/register">Register</Link>
+              </Button>
             </nav>
           )}
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-6 py-8">{children}</main>
+      <main className="mx-auto max-w-6xl px-6 py-10">{children}</main>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Button } from "../components/ui/button";
 import { Textarea } from "../components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import Page from "../components/Page";
 
 export default function Tutor() {
   const [message, setMessage] = React.useState("");
@@ -38,25 +39,31 @@ export default function Tutor() {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-semibold">AI Tutor</h1>
+    <Page className="space-y-8">
+      <div className="space-y-2" data-animate="fade">
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">AI tutor</p>
+        <h1 className="text-4xl font-semibold">Ask a focused question.</h1>
         <p className="text-muted-foreground">Text-only guidance for SAT prep and admissions planning.</p>
       </div>
 
-      <Card>
+      <Card data-animate="card">
         <CardHeader>
           <CardTitle>Chat</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex flex-col gap-2 text-sm">
+          <div className="flex flex-col gap-3 text-sm">
             {history.length === 0 ? (
               <div className="text-muted-foreground">Ask a question to get started.</div>
             ) : (
               history.map((item, idx) => (
-                <div key={idx} className={`rounded-md border p-3 ${item.role === "assistant" ? "bg-muted" : "bg-white"}`}>
-                  <div className="text-xs uppercase text-muted-foreground">{item.role}</div>
-                  <div>{item.text}</div>
+                <div
+                  key={idx}
+                  className={`rounded-2xl border border-white/60 p-4 ${
+                    item.role === "assistant" ? "bg-muted/60" : "bg-white/80"
+                  }`}
+                >
+                  <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{item.role}</div>
+                  <div className="mt-2">{item.text}</div>
                 </div>
               ))
             )}
@@ -94,6 +101,6 @@ export default function Tutor() {
           <p className="text-xs text-muted-foreground">{disclaimer || "AI guidance only."}</p>
         </CardContent>
       </Card>
-    </div>
+    </Page>
   );
 }

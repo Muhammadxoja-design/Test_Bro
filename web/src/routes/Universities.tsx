@@ -4,6 +4,7 @@ import { listUniversities } from "../api";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
+import Page from "../components/Page";
 
 export default function Universities() {
   const [search, setSearch] = React.useState("");
@@ -24,17 +25,18 @@ export default function Universities() {
   }, [fetchList]);
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-semibold">Universities</h1>
-        <p className="text-muted-foreground">Search and explore US universities.</p>
+    <Page className="space-y-8">
+      <div className="space-y-2" data-animate="fade">
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">Universities</p>
+        <h1 className="text-4xl font-semibold">Explore US programs.</h1>
+        <p className="text-muted-foreground">Search by name and state to refine your list.</p>
       </div>
 
-      <Card>
+      <Card data-animate="card">
         <CardHeader>
           <CardTitle>Search</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-3 md:flex-row">
+        <CardContent className="grid gap-3 md:grid-cols-[1fr_180px_auto] md:items-center">
           <Input placeholder="Search by name" value={search} onChange={(e) => setSearch(e.target.value)} />
           <Input placeholder="State (e.g. CA)" value={state} onChange={(e) => setState(e.target.value.toUpperCase())} />
           <Button onClick={fetchList}>Apply</Button>
@@ -44,18 +46,20 @@ export default function Universities() {
       {loading ? (
         <div className="text-muted-foreground">Loading universities...</div>
       ) : universities.length === 0 ? (
-        <Card>
+        <Card data-animate="card">
           <CardContent className="p-6 text-sm text-muted-foreground">No universities found.</CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2">
           {universities.map((uni) => (
-            <Card key={uni.id}>
+            <Card key={uni.id} data-animate="card">
               <CardHeader>
                 <CardTitle>{uni.name}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">{uni.state} ? SAT {uni.satRangeMin ?? "N/A"}-{uni.satRangeMax ?? "N/A"}</p>
+                <p className="text-sm text-muted-foreground">
+                  {uni.state} - SAT {uni.satRangeMin ?? "N/A"}-{uni.satRangeMax ?? "N/A"}
+                </p>
                 <Button asChild className="mt-4" variant="secondary">
                   <Link to={`/universities/${uni.id}`}>View details</Link>
                 </Button>
@@ -64,6 +68,6 @@ export default function Universities() {
           ))}
         </div>
       )}
-    </div>
+    </Page>
   );
 }

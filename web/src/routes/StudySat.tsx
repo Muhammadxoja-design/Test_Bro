@@ -2,6 +2,7 @@ import React from "react";
 import { getSatTopics } from "../api";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
+import Page from "../components/Page";
 
 export default function StudySat() {
   const [topics, setTopics] = React.useState<{ id: string; name: string; description: string | null }[]>([]);
@@ -15,12 +16,16 @@ export default function StudySat() {
   }, []);
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-semibold">SAT Study</h1>
+    <Page className="space-y-8">
+      <div className="space-y-2" data-animate="fade">
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">SAT prep</p>
+        <h1 className="text-4xl font-semibold">Choose a focus area.</h1>
+        <p className="text-muted-foreground">Practice the topics that move your score fastest.</p>
+      </div>
       {loading ? (
         <div className="text-muted-foreground">Loading topics...</div>
       ) : topics.length === 0 ? (
-        <Card>
+        <Card data-animate="card">
           <CardHeader>
             <CardTitle>No topics yet</CardTitle>
           </CardHeader>
@@ -29,9 +34,9 @@ export default function StudySat() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2">
           {topics.map((topic) => (
-            <Card key={topic.id}>
+            <Card key={topic.id} data-animate="card">
               <CardHeader>
                 <CardTitle>{topic.name}</CardTitle>
               </CardHeader>
@@ -45,6 +50,6 @@ export default function StudySat() {
           ))}
         </div>
       )}
-    </div>
+    </Page>
   );
 }

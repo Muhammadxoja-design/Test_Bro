@@ -1,35 +1,44 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Sora:wght@300;400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: 30 33% 98%;
-  --foreground: 222 25% 18%;
+  --background: 32 40% 98%;
+  --foreground: 222 30% 12%;
   --card: 0 0% 100%;
-  --card-foreground: 222 25% 18%;
+  --card-foreground: 222 30% 12%;
   --popover: 0 0% 100%;
-  --popover-foreground: 222 25% 18%;
-  --primary: 210 90% 45%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 40 70% 90%;
-  --secondary-foreground: 222 25% 18%;
-  --muted: 210 20% 94%;
-  --muted-foreground: 220 8% 45%;
-  --accent: 190 80% 88%;
-  --accent-foreground: 222 25% 18%;
+  --popover-foreground: 222 30% 12%;
+  --primary: 199 86% 46%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 40 93% 88%;
+  --secondary-foreground: 222 30% 12%;
+  --muted: 210 26% 94%;
+  --muted-foreground: 215 12% 42%;
+  --accent: 186 70% 90%;
+  --accent-foreground: 222 30% 12%;
   --destructive: 0 74% 52%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 214 25% 88%;
-  --input: 214 25% 88%;
-  --ring: 210 90% 45%;
-  --radius: 0.75rem;
+  --destructive-foreground: 0 0% 100%;
+  --border: 210 24% 88%;
+  --input: 210 24% 88%;
+  --ring: 199 86% 46%;
+  --radius: 1rem;
 }
 
 body {
   @apply bg-background text-foreground antialiased;
-  font-family: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  font-family: "Manrope", "Segoe UI", system-ui, sans-serif;
 }
 
 * {
   @apply border-border;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Sora", "Manrope", "Segoe UI", system-ui, sans-serif;
 }

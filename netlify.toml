@@ -4,6 +4,9 @@
   command = "npm run build"
   functions = "netlify/functions"
 
+[functions]
+  included_files = ["server/drizzle/0000_init.sql"]
+
 [dev]
   command = "npm run dev"
   targetPort = 5173

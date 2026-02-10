@@ -10,6 +10,9 @@
     "start": "npm --workspace server run start",
     "test": "npm --workspace server run test"
   },
+  "dependencies": {
+    "serverless-http": "^3.2.0"
+  },
   "devDependencies": {
     "concurrently": "^8.2.2"
   }

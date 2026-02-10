@@ -1,11 +1,17 @@
 [build]
-  base = "web"
-  publish = "dist"
+  base = "."
+  publish = "web/dist"
   command = "npm run build"
+  functions = "netlify/functions"
 
 [dev]
   command = "npm run dev"
   targetPort = 5173
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/api/:splat"
+  status = 200
 
 [[redirects]]
   from = "/*"

@@ -8,6 +8,9 @@ let dbInstance: ReturnType<typeof drizzle> | null = null;
 let sqliteInstance: Database.Database | null = null;
 
 export function getDbPath() {
+  if (process.env.NETLIFY) {
+    return path.resolve("/tmp", process.env.DB_PATH || "sypev.sqlite");
+  }
   return path.resolve(process.cwd(), process.env.DB_PATH || "./data/dev.sqlite");
 }
 
@@ -36,9 +39,13 @@ export function ensureSchema() {
     if (row) {
       return;
     }
-    const migrationPath = path.join(process.cwd(), "drizzle", "0000_init.sql");
-    if (!fs.existsSync(migrationPath)) {
-      console.warn(`Migration file not found at: ${migrationPath}`);
+    const migrationCandidates = [
+      path.join(process.cwd(), "drizzle", "0000_init.sql"),
+      path.join(process.cwd(), "server", "drizzle", "0000_init.sql")
+    ];
+    const migrationPath = migrationCandidates.find((candidate) => fs.existsSync(candidate));
+    if (!migrationPath) {
+      console.warn(`Migration file not found. Tried: ${migrationCandidates.join(", ")}`);
       return;
     }
     const sql = fs.readFileSync(migrationPath, "utf-8");

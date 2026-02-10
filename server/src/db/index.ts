@@ -8,9 +8,16 @@ let dbInstance: ReturnType<typeof drizzle> | null = null;
 let sqliteInstance: Database.Database | null = null;
 
 export function getDbPath() {
-  if (process.env.NETLIFY) {
+  const runningInLambda =
+    Boolean(process.env.NETLIFY) ||
+    Boolean(process.env.AWS_LAMBDA_FUNCTION_NAME) ||
+    Boolean(process.env.LAMBDA_TASK_ROOT) ||
+    process.cwd().startsWith("/var/task");
+
+  if (runningInLambda) {
     return path.resolve("/tmp", process.env.DB_PATH || "sypev.sqlite");
   }
+
   return path.resolve(process.cwd(), process.env.DB_PATH || "./data/dev.sqlite");
 }
 

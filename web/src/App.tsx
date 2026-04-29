@@ -21,6 +21,7 @@ import ForgotPassword from "./routes/ForgotPassword";
 import ResetPassword from "./routes/ResetPassword";
 import AccountSettings from "./routes/AccountSettings";
 import ContentFeed from "./routes/ContentFeed";
+import Roadmap from "./routes/Roadmap";
 
 function ProtectedRoute({ children }: { children: React.ReactElement }) {
   const { user, preferences, loading } = useAuth();
@@ -134,6 +135,12 @@ function Layout({ children }: { children: React.ReactNode }) {
                 className="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary"
               >
                 Admissions
+              </Link>
+              <Link
+                to="/roadmap"
+                className="rounded-full px-3 py-1 hover:bg-indigo-50 hover:text-indigo-600 font-medium text-indigo-500"
+              >
+                Roadmap
               </Link>
               <Link
                 to="/universities"
@@ -253,6 +260,14 @@ export default function App() {
                   element={
                     <ProtectedRoute>
                       <Admissions />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/roadmap"
+                  element={
+                    <ProtectedRoute>
+                      <Roadmap />
                     </ProtectedRoute>
                   }
                 />

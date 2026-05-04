@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Sora:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,37 +6,14 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --primary: 221 83% 53%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222 47% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222 47% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221 83% 53%;
-    --radius: 0.75rem;
-  }
-
-  .dark {
-    --background: 222 47% 11%;
+    --background: 222 47% 4%;
     --foreground: 210 40% 98%;
-    --card: 222 47% 11%;
+    --card: 222 47% 6%;
     --card-foreground: 210 40% 98%;
-    --popover: 222 47% 11%;
+    --popover: 222 47% 4%;
     --popover-foreground: 210 40% 98%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 222 47% 11%;
+    --primary: 226 100% 64%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 217 32% 17%;
     --secondary-foreground: 210 40% 98%;
     --muted: 217 32% 17%;
@@ -47,53 +24,56 @@
     --destructive-foreground: 210 40% 98%;
     --border: 217 32% 17%;
     --input: 217 32% 17%;
-    --ring: 224 76% 48%;
+    --ring: 226 100% 64%;
+    --radius: 1rem;
+    
+    --success: 160 84% 39%;
+    --warning: 38 92% 50%;
+    --danger: 0 84% 60%;
   }
 
-  /* Accent Colors */
-  [data-accent="sky"] {
-    --primary: 199 89% 48%;
-    --ring: 199 89% 48%;
+  .dark {
+    --background: 222 47% 2%;
+    --foreground: 210 40% 98%;
+    /* ... rest remains dark by default in this theme ... */
   }
-  [data-accent="violet"] {
-    --primary: 262 83% 58%;
-    --ring: 262 83% 58%;
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/5 backdrop-blur-lg border border-white/10;
   }
-  [data-accent="rose"] {
-    --primary: 346 84% 61%;
-    --ring: 346 84% 61%;
-  }
-  [data-accent="amber"] {
-    --primary: 38 92% 50%;
-    --ring: 38 92% 50%;
-  }
-  [data-accent="emerald"] {
-    --primary: 160 84% 39%;
-    --ring: 160 84% 39%;
+  
+  .glass-morphism {
+    @apply bg-slate-900/40 backdrop-blur-md border border-slate-800/50 shadow-xl;
   }
 
-  /* Vibe Overrides */
-  [data-vibe="playful"] {
-    --radius: 1.5rem;
+  .glow-primary {
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
   }
-  [data-vibe="bold"] {
-    --radius: 0.25rem;
-    font-weight: 500;
+  
+  .glow-success {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+  }
+
+  .glow-amber {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
   }
 }
 
 body {
   @apply bg-background text-foreground antialiased;
-  font-family: "Manrope", "Segoe UI", system-ui, sans-serif;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Outfit", sans-serif;
 }
 
 * {
   @apply border-border;
 }
 
-h1,
-h2,
-h3,
-h4 {
-  font-family: "Sora", "Manrope", "Segoe UI", system-ui, sans-serif;
-}

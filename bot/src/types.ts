@@ -1,5 +1,3 @@
-// ─── Domain types shared across the bot ────────────────────────────────────
-
 export type IdentifierType = "email" | "phone" | "telegram_id" | "username";
 
 export interface BotUser {

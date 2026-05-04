@@ -8,11 +8,6 @@ import type {
 } from "../types";
 import { normalisePhone } from "../types";
 
-// ────────────────────────────────────────────────────────────────────────────
-// identifyUser
-// Looks up a user by any identifier type. Returns full user + their linked IDs
-// or null if not found.
-// ────────────────────────────────────────────────────────────────────────────
 export async function identifyUser(
   value: string,
   type: IdentifierType,

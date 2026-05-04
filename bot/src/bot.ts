@@ -1,4 +1,4 @@
-import "./config"; // ← validates env vars on startup
+import "./config";
 import { Bot, Context, session } from "grammy";
 import {
   type Conversation,
@@ -11,12 +11,10 @@ import { supabase } from "./db/supabase";
 import { config } from "./config";
 import type { SessionData } from "./types";
 
-// ─── Conversations ─────────────────────────────────────────────────────────────
 import { registerConversation } from "./conversations/register";
 import { loginConversation } from "./conversations/login";
 import { linkAccountConversation } from "./conversations/linkAccount";
 
-// ─── Handlers ─────────────────────────────────────────────────────────────────
 import {
   handleStart,
   handleProfile,
@@ -24,20 +22,15 @@ import {
   handleHelp,
 } from "./handlers/commands";
 
-// ─── Middleware ────────────────────────────────────────────────────────────────
 import { generalRateLimit } from "./middleware/rateLimit";
 
-// ─── Context type ─────────────────────────────────────────────────────────────
 export type BotContext = Context & ConversationFlavor<Context>;
 export type BotConversation = Conversation<BotContext>;
 
-// ─── Create bot ───────────────────────────────────────────────────────────────
-const bot = new Bot<BotContext>(config.BOT_TOKEN);
+const bot = new Bot<BotContext>(config?.BOT_TOKEN);
 
-// ── 1. Rate limiting (first middleware — blocks floods before any processing)
 bot.use(generalRateLimit);
 
-// ── 2. Session: stored in Supabase bot_sessions table  ────────────────────────
 bot.use(
   session<SessionData, BotContext>({
     initial: (): SessionData => ({}),
@@ -46,13 +39,11 @@ bot.use(
   }),
 );
 
-// ── 3. Conversations plugin ────────────────────────────────────────────────────
 bot.use(conversations());
 bot.use(createConversation(registerConversation, "register"));
 bot.use(createConversation(loginConversation, "login"));
 bot.use(createConversation(linkAccountConversation, "link_account"));
 
-// ─── Commands ─────────────────────────────────────────────────────────────────
 bot.command("start", handleStart);
 bot.command("login", (ctx) => ctx.conversation.enter("login"));
 bot.command("register", (ctx) => ctx.conversation.enter("register"));
@@ -61,7 +52,6 @@ bot.command("link", (ctx) => ctx.conversation.enter("link_account"));
 bot.command("logout", handleLogout);
 bot.command("help", handleHelp);
 
-// ─── Reply keyboard text handlers ─────────────────────────────────────────────
 bot.hears("🔑 Kirish", (ctx) => ctx.conversation.enter("login"));
 bot.hears("📝 Ro'yxat", (ctx) => ctx.conversation.enter("register"));
 bot.hears("ℹ️ Haqida", handleHelp);
@@ -72,7 +62,6 @@ bot.hears("❌ Bekor qilish", async (ctx) => {
   });
 });
 
-// ─── Inline button callbacks ──────────────────────────────────────────────────
 bot.callbackQuery("profile", handleProfile);
 bot.callbackQuery("logout", handleLogout);
 bot.callbackQuery("cancel", async (ctx) => {
@@ -83,7 +72,6 @@ bot.callbackQuery("cancel", async (ctx) => {
   });
 });
 
-// Seamless register from unknown identifier callback
 bot.callbackQuery(/^register:(.+)$/, async (ctx) => {
   await ctx.answerCallbackQuery();
   await ctx.conversation.enter("register");
@@ -108,7 +96,6 @@ bot.callbackQuery("link_phone", async (ctx) => {
   await ctx.conversation.enter("link_account");
 });
 
-// ─── Contact sharing (Telegram phone verification) ────────────────────────────
 bot.on("message:contact", async (ctx) => {
   const contact = ctx.message.contact;
   if (!contact.phone_number) return;
@@ -135,7 +122,6 @@ bot.on("message:contact", async (ctx) => {
   }
 });
 
-// ─── Fallback ─────────────────────────────────────────────────────────────────
 bot.on("message", async (ctx) => {
   if (ctx.message.text?.startsWith("/")) {
     await ctx.reply(`❓ Noma'lum buyruq. Ko'rish uchun /help`);
@@ -144,7 +130,6 @@ bot.on("message", async (ctx) => {
   // Otherwise silently ignore (conversations handle their own waits)
 });
 
-// ─── Error handler ────────────────────────────────────────────────────────────
 bot.catch((err) => {
   const ctx = err.ctx;
   console.error(`[Bot Error] Update ${ctx.update.update_id}:`, err.error);
@@ -153,7 +138,6 @@ bot.catch((err) => {
     .catch(() => {});
 });
 
-// ─── Start polling ─────────────────────────────────────────────────────────────
 bot.start({
   onStart: (info) => {
     console.log(`🤖 @${info.username} started — ${new Date().toISOString()}`);

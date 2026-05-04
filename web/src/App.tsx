@@ -3,7 +3,7 @@ import React from "react";
 import { Link, Navigate, Route, Routes } from "react-router-dom";
 import { Button } from "./components/ui/button";
 import { AuthProvider, useAuth } from "./lib/auth";
-import { adminMe, adminLogout } from "./api";
+import { adminMe } from "./api";
 import Admissions from "./routes/Admissions";
 import AdminPanel from "./routes/AdminPanel";
 import Dashboard from "./routes/Dashboard";
@@ -22,6 +22,12 @@ import ResetPassword from "./routes/ResetPassword";
 import AccountSettings from "./routes/AccountSettings";
 import ContentFeed from "./routes/ContentFeed";
 import Roadmap from "./routes/Roadmap";
+import ParentDashboard from "./pages/ParentDashboard";
+import LimitForm from "./components/forms/LimitForm";
+import DashboardLayout from "./components/layout/DashboardLayout";
+import ErrorBoundary from "./components/common/ErrorBoundary";
+import { ToastProvider } from "./components/ui/ToastProvider";
+import { useGoogleAnalytics } from "./lib/analytics";
 
 function ProtectedRoute({ children }: { children: React.ReactElement }) {
   const { user, preferences, loading } = useAuth();
@@ -31,11 +37,9 @@ function ProtectedRoute({ children }: { children: React.ReactElement }) {
   if (!user) {
     return <Navigate to="/login" replace />;
   }
-  // 1. Require username
   if (!user.username) {
     return <Navigate to="/set-username" replace />;
   }
-  // 2. Require onboarding (if not on onboarding page)
   const isOnboarding = window.location.pathname === "/onboarding";
   if (preferences && preferences.onboardingDone === 0 && !isOnboarding) {
     return <Navigate to="/onboarding" replace />;
@@ -54,18 +58,7 @@ function AdminRoute({ children }: { children: React.ReactElement }) {
 
   if (adminOk === null)
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#050505",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#6366f1",
-          fontFamily: "'Space Grotesk', sans-serif",
-          fontSize: 18,
-        }}
-      >
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center color-[#6366f1] font-['Space Grotesk'] text-[18px]">
         Authenticating…
       </div>
     );
@@ -91,108 +84,33 @@ function Layout({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div
-      ref={shellRef}
-       className="relative min-h-screen transition-colors duration-500 bg-background"
-    >
+    <div ref={shellRef} className="relative min-h-screen transition-colors duration-500 bg-background">
       <div
         className="pointer-events-none absolute inset-0 -z-10 opacity-30 dark:opacity-10"
-         style={{
-           backgroundImage: "radial-gradient(circle at 50% 0%, hsl(var(--primary) / 0.15), transparent 70%)"
-         }}
+        style={{ backgroundImage: "radial-gradient(circle at 50% 0%, hsl(var(--primary) / 0.15), transparent 70%)" }}
         aria-hidden
       />
-      <header
-        className="sticky top-0 z-20 border-b border-white/40 bg-white/70 backdrop-blur"
-        data-shell="nav"
-      >
+      <header className="sticky top-0 z-20 border-b border-white/40 bg-white/70 backdrop-blur" data-shell="nav">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link
-            to="/dashboard"
-            className="flex items-center gap-3 text-lg font-semibold tracking-tight"
-          >
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
-              S
-            </span>
+          <Link to="/dashboard" className="flex items-center gap-3 text-lg font-semibold tracking-tight">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">S</span>
             Sypev
           </Link>
           {user ? (
             <nav className="flex flex-wrap items-center gap-3 text-sm font-medium">
-              <Link
-                to="/dashboard"
-                className="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary"
-              >
-                Dashboard
-              </Link>
-              <Link
-                to="/study/sat"
-                className="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary"
-              >
-                SAT Study
-              </Link>
-              <Link
-                to="/admissions"
-                className="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary"
-              >
-                Admissions
-              </Link>
-              <Link
-                to="/roadmap"
-                className="rounded-full px-3 py-1 hover:bg-indigo-50 hover:text-indigo-600 font-medium text-indigo-500"
-              >
-                Roadmap
-              </Link>
-              <Link
-                to="/universities"
-                className="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary"
-              >
-                Universities
-              </Link>
-              <Link
-                to="/tutor"
-                className="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary"
-              >
-                AI Counselor
-              </Link>
-              <Link
-                to="/feed"
-                className="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary"
-              >
-                Discovery
-              </Link>
-              <Link
-                to="/account"
-                className="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary"
-              >
-                Account
-              </Link>
-              {user.isAdmin === 1 && (
-                <Link
-                  to="/admin"
-                  className="rounded-full px-3 py-1 font-semibold"
-                  style={{
-                    background: "linear-gradient(135deg,#6366f1,#8b5cf6)",
-                    color: "white",
-                  }}
-                >
-                  ⚡ Admin
-                </Link>
-              )}
-              <Button variant="outline" size="sm" onClick={logout}>
-                Log out
-              </Button>
+              <Link to="/dashboard" className="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary">Dashboard</Link>
+              <Link to="/parent/dashboard" className="rounded-full px-3 py-1 hover:bg-indigo-600/10 text-indigo-500 font-bold border border-indigo-500/20">Parent Portal</Link>
+              <Link to="/study/sat" className="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary">SAT Study</Link>
+              <Link to="/admissions" className="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary">Admissions</Link>
+              <Link to="/roadmap" className="rounded-full px-3 py-1 hover:bg-indigo-50 hover:text-indigo-600 font-medium text-indigo-500">Roadmap</Link>
+              <Link to="/universities" className="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary">Universities</Link>
+              <Link to="/account" className="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary">Account</Link>
+              <Button variant="outline" size="sm" onClick={logout}>Log out</Button>
             </nav>
           ) : (
             <nav className="flex items-center gap-3">
-              <Link
-                to="/login"
-                className="text-sm font-medium hover:text-primary"
-              >
-                Log in
-              </Link>
-              <Button asChild size="sm">
-                <Link to="/register">Register</Link>
-              </Button>
+              <Link to="/login" className="text-sm font-medium hover:text-primary">Log in</Link>
+              <Button asChild size="sm"><Link to="/register">Register</Link></Button>
             </nav>
           )}
         </div>
@@ -202,28 +120,17 @@ function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-import { useGoogleAnalytics } from "./lib/analytics";
-
 export default function App() {
   useGoogleAnalytics();
   return (
-    <AuthProvider>
-      <Routes>
-        {/* ── Admin routes — standalone, no Layout wrapper ── */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route
-          path="/admin"
-          element={
-            <AdminRoute>
-              <AdminPanel />
-            </AdminRoute>
-          }
-        />
-
-        {/* ── Regular routes — wrapped in Layout ── */}
-        <Route
-          path="/*"
-          element={
+    <ErrorBoundary>
+      <AuthProvider>
+        <ToastProvider />
+        <Routes>
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminRoute><AdminPanel /></AdminRoute>} />
+          
+          <Route path="/*" element={
             <Layout>
               <Routes>
                 <Route path="/login" element={<Login />} />
@@ -231,107 +138,29 @@ export default function App() {
                 <Route path="/set-username" element={<SetUsername />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
-                <Route
-                  path="/dashboard"
-                  element={
-                    <ProtectedRoute>
-                      <Dashboard />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/profile"
-                  element={
-                    <ProtectedRoute>
-                      <Profile />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/study/sat"
-                  element={
-                    <ProtectedRoute>
-                      <StudySat />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admissions"
-                  element={
-                    <ProtectedRoute>
-                      <Admissions />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/roadmap"
-                  element={
-                    <ProtectedRoute>
-                      <Roadmap />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/universities"
-                  element={
-                    <ProtectedRoute>
-                      <Universities />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/universities/:id"
-                  element={
-                    <ProtectedRoute>
-                      <UniversityDetail />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/onboarding"
-                  element={
-                    <ProtectedRoute>
-                      <Onboarding />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/tutor"
-                  element={
-                    <ProtectedRoute>
-                      <AiChat />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/feed"
-                  element={
-                    <ProtectedRoute>
-                      <ContentFeed />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/account"
-                  element={
-                    <ProtectedRoute>
-                      <AccountSettings />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/"
-                  element={<Navigate to="/dashboard" replace />}
-                />
-                <Route
-                  path="*"
-                  element={<Navigate to="/dashboard" replace />}
-                />
+                <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                <Route path="/study/sat" element={<ProtectedRoute><StudySat /></ProtectedRoute>} />
+                <Route path="/admissions" element={<ProtectedRoute><Admissions /></ProtectedRoute>} />
+                <Route path="/roadmap" element={<ProtectedRoute><Roadmap /></ProtectedRoute>} />
+                <Route path="/universities" element={<ProtectedRoute><Universities /></ProtectedRoute>} />
+                <Route path="/universities/:id" element={<ProtectedRoute><UniversityDetail /></ProtectedRoute>} />
+                <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+                <Route path="/tutor" element={<ProtectedRoute><AiChat /></ProtectedRoute>} />
+                <Route path="/feed" element={<ProtectedRoute><ContentFeed /></ProtectedRoute>} />
+                <Route path="/account" element={<ProtectedRoute><AccountSettings /></ProtectedRoute>} />
+                
+                {/* ── Parental Control Routes ── */}
+                <Route path="/parent/dashboard" element={<ProtectedRoute><ParentDashboard /></ProtectedRoute>} />
+                <Route path="/limits" element={<ProtectedRoute><DashboardLayout><div className="flex justify-center items-center py-10"><LimitForm /></div></DashboardLayout></ProtectedRoute>} />
+                
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route path="*" element={<Navigate to="/dashboard" replace />} />
               </Routes>
             </Layout>
-          }
-        />
-      </Routes>
-    </AuthProvider>
+          } />
+        </Routes>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
